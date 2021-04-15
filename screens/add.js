@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Button, TextInput } from "react-native";
+import { Formik } from 'formik';
 
 export default function AddDeck({navigation}) {
 
@@ -9,18 +10,23 @@ export default function AddDeck({navigation}) {
 
   return(
     <View style={styles.container}>
-      <Formik
-        initialValues={{ title: '',  fraction: '', description: '', background: '' }}
-        onSubmit={(values) => {
+      <Formik initialValues={{ title: '',  fraction: '', description: '', background: '' }}
+              onSubmit={(values) => {
 
-        }}
+              }}
       >
-        {(props) => (
+        {(props => (
           <View>
-            <TextInput />
+            <TextInput
+              style={styles.titleText}
+              placeholder='Review title'
+              onChangeText={props.handleChange('title')}
+              value={props.values.title}
+            />
           </View>
-        )}
+        ))}
       </Formik>
+
       <Text style={styles.titleText}>
         Add Screen
       </Text>
