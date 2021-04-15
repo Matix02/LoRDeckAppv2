@@ -1,35 +1,32 @@
 import React, { Component } from 'react';
-import { TextInput, Button, FlatList, StyleSheet, Text, View, } from 'react-native';
+import { Button,  StyleSheet, Text, View } from 'react-native';
 
-export default function Header() {
+export default function Header({ navigation }) {
+
+
+
   return (
     <View style={styles.header}>
       <Text style={styles.headerText}>App</Text>
-        <Button style={styles.headerButton} title={'ADD'}/>
+      <Button title="Go to Home_Page" onPress={() => navigation.push('AddDeck')}/>
     </View>
-
   );
 }
 
 const styles = StyleSheet.create({
   header: {
     width: '100%',
-    height: '10%',
-    backgroundColor: '#004cff',
+    height: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: '5%',
-    paddingRight: '5%',
     margin: 0,
-
   },
   headerText: {
     fontWeight: 'bold',
     fontSize: 20,
-    color: '#fff',
+    color: '#000',
     letterSpacing: 1,
-
   },
   headerButton: {
   },

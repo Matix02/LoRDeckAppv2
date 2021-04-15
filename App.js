@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { TextInput, Button, FlatList, StyleSheet, Text, View, } from 'react-native';
-import Header from './shared/header';
+import Navigator from './routes/homeStack';
+import Card from './shared/card';
 
 const firebase = require("firebase");
 
@@ -21,59 +22,37 @@ if(firebase.apps.length === 0) {
 }
 const database = firebase.database();
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second2222 Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-];
-
-const Item = ({title}) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title}</Text>
-  </View>
-);
-
 const renderItem = ({item}) => <Item title={item.title} />;
 
 class ButtonBasics extends Component {
   constructor() {
     super();
     this.state = {
-      myText: 'Sprawdzam',
       list:[]
     }
   }
   componentDidMount() {
-    // const ref = firebase.database().ref("users/");
-    //
-    // ref.on('value', snapshot => {
-    //   const li = [];
-    //   snapshot.forEach(child => {
-    //     li.push({
-    //       key: child.key,
-    //       name: child.val().name,
-    //     });
-    //   });
-    //   this.setState({list: li});
-    //   // const data = snapshot.val();
-    // });
+    const ref = firebase.database().ref("users/");
+
+    ref.on('value', snapshot => {
+      const li = [];
+      snapshot.forEach(child => {
+        li.push({
+          key: child.key,
+          name: child.val().name,
+        });
+      });
+      this.setState({list: li});
+      // const data = snapshot.val();
+    });
   }
 
   _onPressButton = () => {
-    // var ref = firebase.database().ref('users');
-    // var newRef = ref.push();
-    // newRef.set({
-    //   name: this.username,
-    // });
+    var ref = firebase.database().ref('users');
+    var newRef = ref.push();
+    newRef.set({
+      name: this.username,
+    });
 
   };
 
@@ -84,12 +63,11 @@ class ButtonBasics extends Component {
       name: 'asdasd',
     });
   }
-  _getData() {}
 
   render() {
     return (
       <View style={styles.container}>
-        <Header />
+        <Navigator />
         <View style={styles.content}>
         <TextInput
           name="username"
@@ -102,25 +80,22 @@ class ButtonBasics extends Component {
         <View style={styles.buttonContainer}>
           <Button onPress={this._saveReference} title="Db Active2255" />
         </View>
-        <View style={styles.buttonContainer}>
-          <Button onPress={this._getData} title="GetData" />
-        </View>
         {/*<FlatList*/}
         {/*  data={DATA}*/}
         {/*  renderItem={renderItem}*/}
         {/*  keyExtractor={item => item.id}*/}
         {/*/>*/}
-        {/*<FlatList*/}
-        {/*  data={this.state.list}*/}
-        {/*  keyExtractor={item => item.key}*/}
-        {/*  renderItem={({ item }) => {*/}
-        {/*    return (*/}
-        {/*      <View>*/}
-        {/*        <Text> {item.name}</Text>*/}
-        {/*      </View>*/}
-        {/*    );*/}
-        {/*  }}*/}
-        {/*/>*/}
+        <FlatList
+          data={this.state.list}
+          keyExtractor={item => item.key}
+          renderItem={({ item }) => {
+            return (
+                <Card>
+                <Text> {item.name}</Text>
+                </Card>
+            );
+          }}
+        />
         </View>
       </View>
     );
