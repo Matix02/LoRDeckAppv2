@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { TextInput, Button, FlatList, StyleSheet, Text, View, } from 'react-native';
+import React, { Component, useState } from "react";
+import { TextInput, Button, FlatList, StyleSheet, Text, View, Modal } from 'react-native';
 import Navigator from './routes/homeStack';
 import Card from './shared/card';
 
@@ -20,13 +20,14 @@ const app = {
 if(firebase.apps.length === 0) {
   firebase.initializeApp(app)
 }
-const database = firebase.database();
+//const database = firebase.database();
 
 const renderItem = ({item}) => <Item title={item.title} />;
 
 class ButtonBasics extends Component {
   constructor() {
     super();
+
     this.state = {
       list:[]
     }
@@ -53,7 +54,6 @@ class ButtonBasics extends Component {
     newRef.set({
       name: this.username,
     });
-
   };
 
   _saveReference() {
@@ -66,36 +66,40 @@ class ButtonBasics extends Component {
 
   render() {
     return (
+
       <View style={styles.container}>
         <Navigator />
+
         <View style={styles.content}>
-        <TextInput
-          name="username"
-          placeholder="Name"
-          onChangeText={text => (this.username = text)}
-        />
-        <View style={styles.buttonContainer}>
-          <Button onPress={this._onPressButton} title="Add25" />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button onPress={this._saveReference} title="Db Active2255" />
-        </View>
+
+          <FlatList
+            data={this.state.list}
+            keyExtractor={item => item.key}
+            renderItem={({ item }) => {
+              return (
+                <Card>
+                  <Text> {item.name}</Text>
+                </Card>
+              );
+            }}
+          />
+        {/*<TextInput*/}
+        {/*  name="username"*/}
+        {/*  placeholder="Name"*/}
+        {/*  onChangeText={text => (this.username = text)}*/}
+        {/*/>*/}
+        {/*<View style={styles.buttonContainer}>*/}
+        {/*  <Button onPress={this._onPressButton} title="Add25" />*/}
+        {/*</View>*/}
+        {/*<View style={styles.buttonContainer}>*/}
+        {/*  <Button onPress={this._saveReference} title="Db Active2255" />*/}
+        {/*</View>*/}
         {/*<FlatList*/}
         {/*  data={DATA}*/}
         {/*  renderItem={renderItem}*/}
         {/*  keyExtractor={item => item.id}*/}
         {/*/>*/}
-        <FlatList
-          data={this.state.list}
-          keyExtractor={item => item.key}
-          renderItem={({ item }) => {
-            return (
-                <Card>
-                <Text> {item.name}</Text>
-                </Card>
-            );
-          }}
-        />
+
         </View>
       </View>
     );

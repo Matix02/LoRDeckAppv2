@@ -3,6 +3,8 @@ import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
 import AddDeck from '../screens/add';
 import Home from '../screens/home';
+//import Home from '../App';
+
 import Header from '../shared/header';
 
 const screens = {
