@@ -20,7 +20,7 @@ const app = {
 if(firebase.apps.length === 0) {
   firebase.initializeApp(app)
 }
-//const database = firebase.database();
+const database = firebase.database();
 
 const renderItem = ({item}) => <Item title={item.title} />;
 
@@ -42,6 +42,7 @@ class ButtonBasics extends Component {
           key: child.key,
           name: child.val().name,
         });
+      //ref.child(child.key).remove();
       });
       this.setState({list: li});
       // const data = snapshot.val();
@@ -49,12 +50,23 @@ class ButtonBasics extends Component {
   }
 
   _onPressButton = () => {
-    var ref = firebase.database().ref('users');
-    var newRef = ref.push();
+    const ref = firebase.database().ref("users");
+    const newRef = ref.push();
     newRef.set({
       name: this.username,
     });
   };
+
+  _deleteDatabase() {
+    const ref = firebase.database().ref("users/");
+    ref.on('value', snapshot => {
+      snapshot.forEach(child => {
+        ref.child(child.key).remove();
+      });
+      // const data = snapshot.val();
+    });
+  }
+
 
   _saveReference() {
     const ref = database.ref("users");
@@ -89,11 +101,14 @@ class ButtonBasics extends Component {
         {/*  onChangeText={text => (this.username = text)}*/}
         {/*/>*/}
         {/*<View style={styles.buttonContainer}>*/}
-        {/*  <Button onPress={this._onPressButton} title="Add25" />*/}
+        {/*  <Button onPress={this._onPressButton} title="Delete" />*/}
         {/*</View>*/}
-        {/*<View style={styles.buttonContainer}>*/}
-        {/*  <Button onPress={this._saveReference} title="Db Active2255" />*/}
-        {/*</View>*/}
+        <View style={styles.buttonContainer}>
+          <Button onPress={this._saveReference} title="Add Random Record" />
+        </View>
+          <View style={styles.buttonContainer}>
+            <Button onPress={this._deleteDatabase} title="Delete All" />
+          </View>
         {/*<FlatList*/}
         {/*  data={DATA}*/}
         {/*  renderItem={renderItem}*/}
