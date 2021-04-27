@@ -21,8 +21,6 @@ if(firebase.apps.length === 0) {
 }
 const database = firebase.database();
 
-
-
 export default function Header({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -30,14 +28,15 @@ export default function Header({ navigation }) {
     const ref = database.ref("users");
     const newRef = ref.push();
     newRef.set({
-      name: 'ModalUser',
-      title: values.title,
+      name: values.name,
+      description: values.description,
+
     });
     setModalOpen(false);
   }
 
   return (
-    <View style={styles.header}>
+    <View >
       <Modal animationType="slide" visible={modalOpen}>
         <View style={styles.modalContainer}>
         <Icon
@@ -51,7 +50,7 @@ export default function Header({ navigation }) {
 
           {/* Formularz */}
 
-          <Formik initialValues={{ title: '',  fraction: '', description: '', background: '' }}
+          <Formik initialValues={{ name: '',  fraction: '', description: '', background: '' }}
                   onSubmit={(values) => {
                     console.log(values);
                     addDeck(values);
@@ -62,8 +61,8 @@ export default function Header({ navigation }) {
                 <TextInput
                   style={styles.input}
                   placeholder='Title'
-                  onChangeText={props.handleChange('title')}
-                  value={props.values.title}
+                  onChangeText={props.handleChange('name')}
+                  value={props.values.name}
                 />
                 <TextInput
                   multiline

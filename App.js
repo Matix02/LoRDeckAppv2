@@ -1,7 +1,9 @@
 import React, { Component, useState } from "react";
-import { TextInput, Button, FlatList, StyleSheet, Text, View, Modal } from 'react-native';
-import Navigator from './routes/homeStack';
+import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Card from './shared/card';
+import { createSwitchNavigator, createAppContainer} from "react-navigation";
+import DeckDetails from "./screens/deckDetails";
+import Header from './shared/header';
 
 const firebase = require("firebase");
 
@@ -24,7 +26,13 @@ const database = firebase.database();
 
 const renderItem = ({item}) => <Item title={item.title} />;
 
-class ButtonBasics extends Component {
+class App extends Component {
+  render() {
+   return  <AppContainer />
+  }
+}
+
+class ButtonBasics extends React.Component {
   constructor() {
     super();
 
@@ -32,6 +40,7 @@ class ButtonBasics extends Component {
       list:[]
     }
   }
+
   componentDidMount() {
     const ref = firebase.database().ref("users/");
 
@@ -55,7 +64,7 @@ class ButtonBasics extends Component {
     newRef.set({
       name: this.username,
     });
-  };
+  }
 
   _deleteDatabase() {
     const ref = firebase.database().ref("users/");
@@ -67,7 +76,6 @@ class ButtonBasics extends Component {
     });
   }
 
-
   _saveReference() {
     const ref = database.ref("users");
     const newRef = ref.push();
@@ -77,10 +85,11 @@ class ButtonBasics extends Component {
   }
 
   render() {
+    const { navigation } = this.props;
     return (
 
       <View style={styles.container}>
-        <Navigator />
+        <Header />
 
         <View style={styles.content}>
 
@@ -89,54 +98,61 @@ class ButtonBasics extends Component {
             keyExtractor={item => item.key}
             renderItem={({ item }) => {
               return (
-                <Card>
-                  <Text> {item.name}</Text>
-                </Card>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('Dashboard', item)}>
+                  <Card>
+                    <Text> {item.name}</Text>
+                  </Card>
+                </TouchableOpacity>
               );
             }}
           />
-        {/*<TextInput*/}
-        {/*  name="username"*/}
-        {/*  placeholder="Name"*/}
-        {/*  onChangeText={text => (this.username = text)}*/}
-        {/*/>*/}
-        {/*<View style={styles.buttonContainer}>*/}
-        {/*  <Button onPress={this._onPressButton} title="Delete" />*/}
-        {/*</View>*/}
         <View style={styles.buttonContainer}>
           <Button onPress={this._saveReference} title="Add Random Record" />
         </View>
           <View style={styles.buttonContainer}>
-            <Button onPress={this._deleteDatabase} title="Delete All" />
+            <Button onPress={this._deleteDatabase} title="Delete All2" />
           </View>
-        {/*<FlatList*/}
-        {/*  data={DATA}*/}
-        {/*  renderItem={renderItem}*/}
-        {/*  keyExtractor={item => item.id}*/}
-        {/*/>*/}
-
+          <View style={styles.buttonContainer}>
+            <Button onPress={() => this.props.navigation.navigate('Dashboard')}
+                    title="Teleport2" />
+          </View>
         </View>
       </View>
     );
   }
 }
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    content: {
-      flex: 1,
-      justifyContent: 'center',
-      margin: 8,
-    },
-    buttonContainer: {
-      margin: 5,
-    },
-    multiButtonContainer: {
-      margin: 20,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    }
-  });
 
-export  default ButtonBasics;
+export default App;
+
+const AppSwitchNavigator = createSwitchNavigator({
+  Welcome: {
+    screen: ButtonBasics,
+    navigationOptions: {
+      headerTitle: () => <Header />
+    }
+  },
+  Dashboard: {
+    screen: DeckDetails
+  }
+});
+
+const AppContainer = createAppContainer(AppSwitchNavigator);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    margin: 8,
+  },
+  buttonContainer: {
+    margin: 5,
+  },
+  multiButtonContainer: {
+    margin: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  }
+});
