@@ -1,9 +1,13 @@
 import React, { Component, useState } from "react";
 import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import Card from './shared/card';
+//Navigation - Head
 import { createSwitchNavigator, createAppContainer} from "react-navigation";
+import {createStackNavigator} from 'react-navigation-stack';
+//Navigation - Inside
 import DeckDetails from "./screens/deckDetails";
 import Header from './shared/header';
+import AddDeck from "./screens/add";
 
 const firebase = require("firebase");
 
@@ -28,7 +32,7 @@ const renderItem = ({item}) => <Item title={item.title} />;
 
 class App extends Component {
   render() {
-   return  <AppContainer />
+   return <AppContainer2 />
   }
 }
 
@@ -40,7 +44,6 @@ class ButtonBasics extends React.Component {
       list:[]
     }
   }
-
   componentDidMount() {
     const ref = firebase.database().ref("users/");
 
@@ -124,6 +127,23 @@ class ButtonBasics extends React.Component {
 
 export default App;
 
+const screens = {
+  Welcome: {
+    screen: ButtonBasics
+  },
+  Dashboard: {
+    screen: DeckDetails
+  }
+}
+
+const AppSwitchNavigator2 = createStackNavigator(screens, {
+  defaultNavigationOptions: {
+    headerTintColor: '#444',
+  }
+});
+const AppContainer2 = createAppContainer(AppSwitchNavigator2);
+
+//Second Stack Navigator
 const AppSwitchNavigator = createSwitchNavigator({
   Welcome: {
     screen: ButtonBasics,
@@ -135,8 +155,11 @@ const AppSwitchNavigator = createSwitchNavigator({
     screen: DeckDetails
   }
 });
-
+/* Jest przełom przy toolbarze, nalezy teraz w ten nowy zaimplementowac ten z tego
+starego z HomeStack
+* */
 const AppContainer = createAppContainer(AppSwitchNavigator);
+
 
 const styles = StyleSheet.create({
   container: {
