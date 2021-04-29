@@ -79,12 +79,11 @@ export default function Header({ navigation }) {
               </View>
             ))}
           </Formik>
-
           {/* Formularz END */}
-
         </View>
       </Modal>
 
+      <View style={styles.header}>
       <Text style={styles.headerText}>App</Text>
       {/*/<Button title="add" onPress={() => navigation.push('AddDeck')}/>*/}
 
@@ -95,6 +94,7 @@ export default function Header({ navigation }) {
         onPress={() => setModalOpen(true)}
       >
       </Icon>
+      </View>
     </View>
   );
 }
@@ -114,8 +114,6 @@ const styles = StyleSheet.create({
     color: '#000',
     letterSpacing: 1,
   },
-  headerButton: {
-  },
   headerRight: {
     /*marginTop: '4%',
     marginRight: 10,
@@ -124,14 +122,6 @@ const styles = StyleSheet.create({
   modalToggle: {
     alignSelf: 'center',
     padding: 8,
-
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    fontSize: 18,
-    borderRadius: 6,
   },
   modalContainer: {
     padding: 10,
@@ -140,5 +130,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
    marginLeft: 8,
    marginRight: 8,
-  }
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 6,
+  },
 });

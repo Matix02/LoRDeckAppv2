@@ -92,7 +92,7 @@ class ButtonBasics extends React.Component {
     return (
 
       <View style={styles.container}>
-        <Header />
+        {/*<Header />*/}
 
         <View style={styles.content}>
 
@@ -129,7 +129,10 @@ export default App;
 
 const screens = {
   Welcome: {
-    screen: ButtonBasics
+    screen: ButtonBasics,
+    navigationOptions: {
+      headerTitle: () => <Header />,
+    }
   },
   Dashboard: {
     screen: DeckDetails
@@ -144,21 +147,21 @@ const AppSwitchNavigator2 = createStackNavigator(screens, {
 const AppContainer2 = createAppContainer(AppSwitchNavigator2);
 
 //Second Stack Navigator
-const AppSwitchNavigator = createSwitchNavigator({
-  Welcome: {
-    screen: ButtonBasics,
-    navigationOptions: {
-      headerTitle: () => <Header />
-    }
-  },
-  Dashboard: {
-    screen: DeckDetails
-  }
-});
+// const AppSwitchNavigator = createSwitchNavigator({
+//   Welcome: {
+//     screen: ButtonBasics,
+//     navigationOptions: {
+//       headerTitle: () => <Header />
+//     }
+//   },
+//   Dashboard: {
+//     screen: DeckDetails
+//   }
+// });
 /* Jest przełom przy toolbarze, nalezy teraz w ten nowy zaimplementowac ten z tego
 starego z HomeStack
 * */
-const AppContainer = createAppContainer(AppSwitchNavigator);
+// const AppContainer = createAppContainer(AppSwitchNavigator);
 
 
 const styles = StyleSheet.create({
