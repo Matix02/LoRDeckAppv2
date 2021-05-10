@@ -19,6 +19,7 @@ const app = {
 if(firebase.apps.length === 0) {
   firebase.initializeApp(app)
 }
+
 const database = firebase.database();
 
 export default function Header({ navigation }) {
@@ -49,7 +50,6 @@ export default function Header({ navigation }) {
         </Icon>
 
           {/* Formularz */}
-
           <Formik initialValues={{ name: '',  fraction: '', description: '', background: '' }}
                   onSubmit={(values) => {
                     console.log(values);

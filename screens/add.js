@@ -12,7 +12,6 @@ export default function AddDeck({navigation}) {
     <View style={styles.container}>
       <Formik initialValues={{ title: '',  fraction: '', description: '', background: '' }}
               onSubmit={(values) => {
-
               }}
       >
         {(props => (

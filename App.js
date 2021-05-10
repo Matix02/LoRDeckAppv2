@@ -75,7 +75,6 @@ class ButtonBasics extends React.Component {
       snapshot.forEach(child => {
         ref.child(child.key).remove();
       });
-      // const data = snapshot.val();
     });
   }
 
@@ -101,7 +100,8 @@ class ButtonBasics extends React.Component {
             keyExtractor={item => item.key}
             renderItem={({ item }) => {
               return (
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('Dashboard', item)}>
+                <TouchableOpacity onPress={() => this.props.navigation
+                  .navigate('Dashboard', item)}>
                   <Card>
                     <Text> {item.name}</Text>
                   </Card>
@@ -113,11 +113,11 @@ class ButtonBasics extends React.Component {
           <Button onPress={this._saveReference} title="Add Random Record" />
         </View>
           <View style={styles.buttonContainer}>
-            <Button onPress={this._deleteDatabase} title="Delete All2" />
+            <Button onPress={this._deleteDatabase} title="Delete All3" />
           </View>
           <View style={styles.buttonContainer}>
             <Button onPress={() => this.props.navigation.navigate('Dashboard')}
-                    title="Teleport2" />
+                    title="Teleport3" />
           </View>
         </View>
       </View>
