@@ -117,7 +117,7 @@ class ButtonBasics extends React.Component {
           </View>
           <View style={styles.buttonContainer}>
             <Button onPress={() => this.props.navigation.navigate('Dashboard')}
-                    title="Teleport3" />
+                    title="Teleport5" />
           </View>
         </View>
       </View>

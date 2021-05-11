@@ -36,7 +36,7 @@ export default function DeckDetails({ navigation }) {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       {/*<Text>DeckDetails Screen</Text>*/}
       {/*<Text>{ navigation.getParam('name')}</Text>*/}
       {/*<Text>{ deckName }</Text>*/}
@@ -48,7 +48,7 @@ export default function DeckDetails({ navigation }) {
               }}
       >
         {(props => (
-          <View >
+          <View style={styles.secondContainer}>
             <TextInput
               placeholder='Title'
               onChangeText={props.handleChange('name')}
@@ -62,31 +62,80 @@ export default function DeckDetails({ navigation }) {
           </View>
         ))}
       </Formik>
-      <View styles={styles.header}>
-        <Icon.Button
-          name="add"
-          size={40}
-          color={"#1e90ff"}
-          backgroundColor="#3b5998">
-        </Icon.Button>
-
-        <Icon2.Button
-          name="minus"
-          size={40}
-          color={"#1e90ff"}
-          backgroundColor="#3b5998">
-        </Icon2.Button>
+      {/*Win-Lose Section*/}
+      <Text style={styles.mainWinRatio}>10</Text>
+      <View style={styles.container2}>
+        <View style={styles.container3}>
+          <Text>10</Text>
+          <View style={styles.header}>
+            <View style={styles.propertyButton}>
+              <Icon.Button
+                name="add"
+                size={40}
+                color={"#1e90ff"}
+                backgroundColor="#3b5998">
+              </Icon.Button>
+            </View>
+            <View style={styles.propertyButton}>
+              <Icon2.Button
+                name="minus"
+                size={40}
+                color={"#1e90ff"}
+                backgroundColor="#3b5998">
+              </Icon2.Button>
+            </View>
+          </View>
+        </View>
+        <View style={styles.container3}>
+          <Text>10</Text>
+          <View style={styles.header}>
+            <View style={styles.propertyButton}>
+              <Icon.Button
+                name="add"
+                size={40}
+                color={"#1e90ff"}
+                backgroundColor="#3b5998">
+              </Icon.Button>
+            </View>
+            <View style={styles.propertyButton}>
+              <Icon2.Button
+                name="minus"
+                size={40}
+                color={"#1e90ff"}
+                backgroundColor="#3b5998">
+              </Icon2.Button>
+            </View>
+          </View>
+        </View>
       </View>
     </View>
   )
 }
 const styles = StyleSheet.create({
-  header: {
-    width: '50%',
-    height: '100%',
+  container: {
+    flex: 1,
+  },
+  secondContainer: {
+    flexDirection: 'column',
+  },
+  container2: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    margin: 0,
+    alignItems: 'center'
+  },
+  container3: {
+    alignItems: 'center'
+  },
+  header: {
+    margin: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+
+  },
+  mainWinRatio: {
+    alignSelf: 'center'
+  },
+  propertyButton: {
+    padding: 10,
+    alignSelf: 'center'
   }
 })
