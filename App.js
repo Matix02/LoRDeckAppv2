@@ -53,11 +53,10 @@ class ButtonBasics extends React.Component {
         li.push({
           key: child.key,
           name: child.val().name,
+          lose: child.val().lose,
         });
-      //ref.child(child.key).remove();
       });
       this.setState({list: li});
-      // const data = snapshot.val();
     });
   }
 

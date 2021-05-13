@@ -34,6 +34,16 @@ export default function DeckDetails({ navigation }) {
       name: values.name
     });
   }
+  const decreaseWin = (values) => {
+    const deckId = navigation.getParam('key');
+
+    let winCount = navigation.getParam('lose');
+
+    const ref = database.ref('users/' + deckId);
+    ref.update({
+      lose: winCount-1,
+    });
+  }
 
   return (
     <View style={styles.container}>
@@ -66,23 +76,24 @@ export default function DeckDetails({ navigation }) {
       <Text style={styles.mainWinRatio}>10</Text>
       <View style={styles.container2}>
         <View style={styles.container3}>
-          <Text>10</Text>
+          <Text>{ navigation.getParam('lose')}</Text>
           <View style={styles.header}>
             <View style={styles.propertyButton}>
-              <Icon.Button
-                name="add"
-                size={40}
+              <Icon2
+                name="plussquareo"
+                size={60}
                 color={"#1e90ff"}
-                backgroundColor="#3b5998">
-              </Icon.Button>
+              >
+              </Icon2>
             </View>
             <View style={styles.propertyButton}>
-              <Icon2.Button
-                name="minus"
-                size={40}
-                color={"#1e90ff"}
-                backgroundColor="#3b5998">
-              </Icon2.Button>
+              <Icon2
+                name="minussquareo"
+                size={60}
+                color={"#ff0433"}
+                onPress={() => decreaseWin()}
+              >
+              </Icon2>
             </View>
           </View>
         </View>
@@ -123,19 +134,29 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   container3: {
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
+
   },
   header: {
     margin: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+
 
   },
   mainWinRatio: {
-    alignSelf: 'center'
+    alignSelf: 'center',
+    alignItems: 'center',
+
   },
   propertyButton: {
     padding: 10,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+
   }
 })
