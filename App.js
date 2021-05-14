@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import Card from './shared/card';
 //Navigation - Head
 import { createSwitchNavigator, createAppContainer} from "react-navigation";
@@ -68,6 +68,15 @@ class ButtonBasics extends React.Component {
     });
   }
 
+  _deleteDeck() {
+    const ref = firebase.database().ref("users/");
+    ref.on('value', snapshot => {
+      snapshot.forEach(child => {
+        ref.child(child.key).remove();
+      });
+    });
+  }
+
   _deleteDatabase() {
     const ref = firebase.database().ref("users/");
     ref.on('value', snapshot => {
@@ -102,7 +111,26 @@ class ButtonBasics extends React.Component {
                 <TouchableOpacity onPress={() => this.props.navigation
                   .navigate('Dashboard', item)}>
                   <Card>
-                    <Text> {item.name}</Text>
+                    <View style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}>
+                      <Image source={require('./assets/shadow_isles.png')}
+                             style={{
+                               width:30,
+                               height: 50,
+                             }}
+                      />
+                      <Text style={{
+                      }}>
+                        {item.name}</Text>
+
+                      <Text
+                      style={{
+                      }}>
+                        {10}</Text>
+                      </View>
                   </Card>
                 </TouchableOpacity>
               );
@@ -145,24 +173,6 @@ const AppSwitchNavigator2 = createStackNavigator(screens, {
 });
 const AppContainer2 = createAppContainer(AppSwitchNavigator2);
 
-//Second Stack Navigator
-// const AppSwitchNavigator = createSwitchNavigator({
-//   Welcome: {
-//     screen: ButtonBasics,
-//     navigationOptions: {
-//       headerTitle: () => <Header />
-//     }
-//   },
-//   Dashboard: {
-//     screen: DeckDetails
-//   }
-// });
-/* Jest przełom przy toolbarze, nalezy teraz w ten nowy zaimplementowac ten z tego
-starego z HomeStack
-* */
-// const AppContainer = createAppContainer(AppSwitchNavigator);
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -179,5 +189,9 @@ const styles = StyleSheet.create({
     margin: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  deckRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   }
 });

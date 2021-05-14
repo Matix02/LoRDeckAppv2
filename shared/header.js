@@ -2,6 +2,8 @@ import React, { Component, useState } from "react";
 import { Button, StyleSheet, Text, View, Modal, TextInput } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
+import RadioGroup from "react-native-radio-buttons-group/lib/RadioGroup";
+import { SegmentedControls } from "react-native-radio-buttons";
 
 const firebase = require("firebase");
 const app = {
@@ -31,11 +33,38 @@ export default function Header({ navigation }) {
     newRef.set({
       name: values.name,
       description: values.description,
+      fraction: values.fraction
 
     });
     setModalOpen(false);
   }
+  const radioButtonsData = [{
+    id: '1', // acts as primary key, should be unique and non-empty string
+    label: 'Option 1',
+    value: 'option1',
+    selected: true
+  }, {
+    id: '2',
+    label: 'Option 2',
+    value: 'option2'
+  }, {
+    id: '3',
+    label: 'Option 3',
+    value: 'option3'
+  }, {
+    id: '4',
+    label: 'Option 4',
+    value: 'option4'
+  }, {
+    id: '5',
+    label: 'Option 5',
+    value: 'option5'
+  }]
 
+  const options = [
+    "Option 1",
+    "Option 2"
+  ];
   return (
     <View >
       <Modal animationType="slide" visible={modalOpen}>
@@ -71,11 +100,17 @@ export default function Header({ navigation }) {
                   onChangeText={props.handleChange('description')}
                   value={props.values.description}
                 />
+                <View style={styles.radioGroup}>
+                <RadioGroup
+                  layout={'column'}
+                  radioButtons={radioButtonsData}
+                  value={props.values.fraction}
+                />
+                </View>
                 <Button
                   title="Submit"
                   onPress={() => props.handleSubmit()}
                 />
-
               </View>
             ))}
           </Formik>
@@ -107,6 +142,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     margin: 0,
+  },
+  radioGroup: {
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
   headerText: {
     fontWeight: 'bold',

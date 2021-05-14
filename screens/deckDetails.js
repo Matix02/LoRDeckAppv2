@@ -34,6 +34,7 @@ export default function DeckDetails({ navigation }) {
       name: values.name
     });
   }
+
   const decreaseWin = (values) => {
     const deckId = navigation.getParam('key');
 
