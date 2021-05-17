@@ -1,9 +1,8 @@
 import React, { Component, useState } from "react";
-import { Button, StyleSheet, Text, View, Modal, TextInput } from "react-native";
+import { Button, StyleSheet, Text, View, Modal, TextInput, Picker } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import RadioGroup from "react-native-radio-buttons-group/lib/RadioGroup";
-import { SegmentedControls } from "react-native-radio-buttons";
 
 const firebase = require("firebase");
 const app = {
@@ -61,10 +60,6 @@ export default function Header({ navigation }) {
     value: 'option5'
   }]
 
-  const options = [
-    "Option 1",
-    "Option 2"
-  ];
   return (
     <View >
       <Modal animationType="slide" visible={modalOpen}>
@@ -102,9 +97,13 @@ export default function Header({ navigation }) {
                 />
                 <View style={styles.radioGroup}>
                 <RadioGroup
+                  name={'fraction'}
                   layout={'column'}
                   radioButtons={radioButtonsData}
+                  onValueChange={data => props.setFieldValue('fraction', data) }
                   value={props.values.fraction}
+                  onPress={ data => props.setFieldValue('fraction', data) }
+
                 />
                 </View>
                 <Button
