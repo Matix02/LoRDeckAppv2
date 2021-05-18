@@ -22,10 +22,12 @@ if(firebase.apps.length === 0) {
 }
 
 const database = firebase.database();
+const PickerItem = Picker.Item;
 
 export default function Header({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [selectedItem, setSelectedItem ] = useState(2);
+  const [itemList , setItemList ] = useState(['Demacia', 'Noxus', 'Pilvoter', 'Ionia', 'Shurima']);
   const addDeck = (values) => {
     const ref = database.ref("users");
     const newRef = ref.push();
@@ -61,7 +63,7 @@ export default function Header({ navigation }) {
   }]
 
   return (
-    <View >
+    <View>
       <Modal animationType="slide" visible={modalOpen}>
         <View style={styles.modalContainer}>
         <Icon
@@ -96,16 +98,29 @@ export default function Header({ navigation }) {
                   value={props.values.description}
                 />
                 <View style={styles.radioGroup}>
-                <RadioGroup
-                  name={'fraction'}
-                  layout={'column'}
-                  radioButtons={radioButtonsData}
-                  onValueChange={data => props.setFieldValue('fraction', data) }
-                  value={props.values.fraction}
-                  onPress={ data => props.setFieldValue('fraction', data) }
+                {/*<RadioGroup*/}
+                {/*  name={'fraction'}*/}
+                {/*  layout={'column'}*/}
+                {/*  radioButtons={radioButtonsData}*/}
+                {/*  onValueChange={data => props.setFieldValue('fraction', data) }*/}
+                {/*  value={props.values.fraction}*/}
+                {/*  onPress={ data => props.setFieldValue('fraction', data) }*/}
 
-                />
+                {/*/>*/}
                 </View>
+                <Picker style={{width: 150, height: 180}}
+                        lineColor="#000000" //to set top and bottom line color (Without gradients)
+                        lineGradientColorFrom="#008000" //to set top and bottom starting gradient line color
+                        lineGradientColorTo="#FF5733" //to set top and bottom ending gradient
+                        selectedValue={itemValue => props.setFieldValue('fraction', itemValue)}
+                        itemStyle={{color:"black", fontSize:26}}
+                        onValueChange={(itemValue, itemIndex) => props.setFieldValue('fraction', itemList[itemIndex])}
+                >
+                  {itemList.map((value, i) => (
+                    <PickerItem label={value} value={i} key={i}/>
+                  ))}
+
+                </Picker>
                 <Button
                   title="Submit"
                   onPress={() => props.handleSubmit()}
