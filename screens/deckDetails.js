@@ -1,8 +1,7 @@
 import React from 'react'
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { Formik } from 'formik';
-import Icon from "react-native-vector-icons/Ionicons";
-import Icon2 from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/AntDesign";
 
 const firebase = require("firebase");
 const app = {
@@ -24,25 +23,54 @@ const database = firebase.database();
 
 export default function DeckDetails({ navigation }) {
 
+  // this.state = { list:[] }
+
   let deckName = navigation.getParam('name');
+  let win = navigation.getParam('win');
+  let lose = navigation.getParam('lose');
+  let winRatio = navigation.getParam('winRatio');
+  const deckId = navigation.getParam('key');
+
+  var ref = database.ref('users/' + deckId);
+
+  ref.on("value", function(snapshot)  {
+    //snapshot.val();
+    // snapshot.forEach(child => {
+    //   li.push({
+    //     key: child.key,
+    //     name: child.val().name,
+    //     winRatio: child.val().winRatio,
+    //     win: child.val().win,
+    //     lose: child.val().lose,
+    //   });
+    // });
+    // this.setState({list: li});
+  });
+
+  var loseCount = ref.child("users").child(deckId);
+
+
 
   const updateDeck = (values) => {
-    const deckId = navigation.getParam('key');
-
-    const ref = database.ref('users/' + deckId);
     ref.update({
       name: values.name
     });
   }
+  const getName = ref.on('value', (snapshot) => {
+    return snapshot.val().fraction;
+  });
+
+  const getFullName = (firstName) => {
+    return firstName;
+  }
 
   const decreaseWin = (values) => {
     const deckId = navigation.getParam('key');
-
     let winCount = navigation.getParam('lose');
 
     const ref = database.ref('users/' + deckId);
     ref.update({
-      lose: winCount-1,
+      lose: winCount - 1,
     });
   }
 
@@ -74,48 +102,51 @@ export default function DeckDetails({ navigation }) {
         ))}
       </Formik>
       {/*Win-Lose Section*/}
-      <Text style={styles.mainWinRatio}>10</Text>
+      <Text>{ "DeckID = " + deckId }</Text>
+
+      <Text style={styles.mainWinRatio}>winRatio = { getName }</Text>
       <View style={styles.container2}>
         <View style={styles.container3}>
-          <Text>{ navigation.getParam('lose')}</Text>
+          <Text>{ "win = " + navigation.getParam('lose') }</Text>
           <View style={styles.header}>
             <View style={styles.propertyButton}>
-              <Icon2
+              <Icon
                 name="plussquareo"
                 size={60}
                 color={"#1e90ff"}
               >
-              </Icon2>
+              </Icon>
             </View>
             <View style={styles.propertyButton}>
-              <Icon2
+              <Icon
                 name="minussquareo"
                 size={60}
                 color={"#ff0433"}
                 onPress={() => decreaseWin()}
               >
-              </Icon2>
+              </Icon>
             </View>
           </View>
         </View>
         <View style={styles.container3}>
-          <Text>10</Text>
+          <Text>{"lose = " + lose}</Text>
           <View style={styles.header}>
             <View style={styles.propertyButton}>
-              <Icon.Button
-                name="add"
-                size={40}
+              <Icon
+                name="plussquareo"
+                size={60}
                 color={"#1e90ff"}
-                backgroundColor="#3b5998">
-              </Icon.Button>
+              >
+              </Icon>
             </View>
             <View style={styles.propertyButton}>
-              <Icon2.Button
-                name="minus"
-                size={40}
-                color={"#1e90ff"}
-                backgroundColor="#3b5998">
-              </Icon2.Button>
+              <Icon
+                name="minussquareo"
+                size={60}
+                color={"#ff0433"}
+                onPress={() => decreaseWin()}
+              >
+              </Icon>
             </View>
           </View>
         </View>

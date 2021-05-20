@@ -1,13 +1,12 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import Card from './shared/card';
-//Navigation - Head
-import { createSwitchNavigator, createAppContainer} from "react-navigation";
+
+import { createAppContainer} from "react-navigation";
 import {createStackNavigator} from 'react-navigation-stack';
-//Navigation - Inside
+
 import DeckDetails from "./screens/deckDetails";
 import Header from './shared/header';
-import AddDeck from "./screens/add";
 
 const firebase = require("firebase");
 
@@ -27,8 +26,6 @@ if(firebase.apps.length === 0) {
   firebase.initializeApp(app)
 }
 const database = firebase.database();
-
-const renderItem = ({item}) => <Item title={item.title} />;
 
 class App extends Component {
   render() {
@@ -53,7 +50,7 @@ class ButtonBasics extends React.Component {
         li.push({
           key: child.key,
           name: child.val().name,
-          lose: child.val().lose,
+          winRatio: child.val().winRatio,
         });
       });
       this.setState({list: li});
@@ -102,7 +99,6 @@ class ButtonBasics extends React.Component {
         {/*<Header />*/}
 
         <View style={styles.content}>
-
           <FlatList
             data={this.state.list}
             keyExtractor={item => item.key}
@@ -129,7 +125,7 @@ class ButtonBasics extends React.Component {
                       <Text
                       style={{
                       }}>
-                        {10}</Text>
+                        {item.winRatio + '%'}</Text>
                       </View>
                   </Card>
                 </TouchableOpacity>

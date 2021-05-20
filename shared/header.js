@@ -1,8 +1,7 @@
 import React, { Component, useState } from "react";
 import { Button, StyleSheet, Text, View, Modal, TextInput, Picker } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Formik, Field } from 'formik';
-import RadioGroup from "react-native-radio-buttons-group/lib/RadioGroup";
+import { Formik } from 'formik';
 
 const firebase = require("firebase");
 const app = {
@@ -26,7 +25,6 @@ const PickerItem = Picker.Item;
 
 export default function Header({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem ] = useState(2);
   const [itemList , setItemList ] = useState(['Demacia', 'Noxus', 'Pilvoter', 'Ionia', 'Shurima']);
   const addDeck = (values) => {
     const ref = database.ref("users");
@@ -34,33 +32,13 @@ export default function Header({ navigation }) {
     newRef.set({
       name: values.name,
       description: values.description,
-      fraction: values.fraction
-
+      fraction: values.fraction,
+      win: 0,
+      lose: 0,
+      winRatio: 0
     });
     setModalOpen(false);
   }
-  const radioButtonsData = [{
-    id: '1', // acts as primary key, should be unique and non-empty string
-    label: 'Option 1',
-    value: 'option1',
-    selected: true
-  }, {
-    id: '2',
-    label: 'Option 2',
-    value: 'option2'
-  }, {
-    id: '3',
-    label: 'Option 3',
-    value: 'option3'
-  }, {
-    id: '4',
-    label: 'Option 4',
-    value: 'option4'
-  }, {
-    id: '5',
-    label: 'Option 5',
-    value: 'option5'
-  }]
 
   return (
     <View>
@@ -98,17 +76,8 @@ export default function Header({ navigation }) {
                   value={props.values.description}
                 />
                 <View style={styles.radioGroup}>
-                {/*<RadioGroup*/}
-                {/*  name={'fraction'}*/}
-                {/*  layout={'column'}*/}
-                {/*  radioButtons={radioButtonsData}*/}
-                {/*  onValueChange={data => props.setFieldValue('fraction', data) }*/}
-                {/*  value={props.values.fraction}*/}
-                {/*  onPress={ data => props.setFieldValue('fraction', data) }*/}
-
-                {/*/>*/}
                 </View>
-                <Picker style={{width: 150, height: 180}}
+                <Picker style={{width: 150, height: 100}}
                         lineColor="#000000" //to set top and bottom line color (Without gradients)
                         lineGradientColorFrom="#008000" //to set top and bottom starting gradient line color
                         lineGradientColorTo="#FF5733" //to set top and bottom ending gradient
@@ -119,7 +88,6 @@ export default function Header({ navigation }) {
                   {itemList.map((value, i) => (
                     <PickerItem label={value} value={i} key={i}/>
                   ))}
-
                 </Picker>
                 <Button
                   title="Submit"
