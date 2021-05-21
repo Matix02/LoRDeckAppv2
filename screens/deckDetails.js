@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { Formik } from 'formik';
 import Icon from "react-native-vector-icons/AntDesign";
@@ -23,7 +23,7 @@ const database = firebase.database();
 
 export default function DeckDetails({ navigation }) {
 
-  // this.state = { list:[] }
+  const [deckFName, setDeckFName] = useState(0);
 
   let deckName = navigation.getParam('name');
   let win = navigation.getParam('win');
@@ -31,34 +31,33 @@ export default function DeckDetails({ navigation }) {
   let winRatio = navigation.getParam('winRatio');
   const deckId = navigation.getParam('key');
 
+  console.log('costa');
   var ref = database.ref('users/' + deckId);
 
-  ref.on("value", function(snapshot)  {
-    //snapshot.val();
-    // snapshot.forEach(child => {
-    //   li.push({
-    //     key: child.key,
-    //     name: child.val().name,
-    //     winRatio: child.val().winRatio,
-    //     win: child.val().win,
-    //     lose: child.val().lose,
-    //   });
-    // });
-    // this.setState({list: li});
-  });
-
-  var loseCount = ref.child("users").child(deckId);
-
+  useEffect(() => {
+    const d = database.ref('/users/-Ma952zV2RDTwGobk2U9')
+      .on('value', snapshot => {
+        console.log('user data', snapshot.val().lose);
+        setDeckFName(snapshot.val().lose);
+      });
+  }, )
 
 
   const updateDeck = (values) => {
     ref.update({
       name: values.name
     });
+    console.log("gtfgf");
   }
-  const getName = ref.on('value', (snapshot) => {
-    return snapshot.val().fraction;
-  });
+
+  const test = () => {
+    database.ref('/users/-Ma952zV2RDTwGobk2U9')
+      .on('value', snapshot => {
+        console.log('user data', snapshot.val().lose);
+      })
+    console.log("gtfgf");
+  }
+
 
   const getFullName = (firstName) => {
     return firstName;
@@ -102,9 +101,13 @@ export default function DeckDetails({ navigation }) {
         ))}
       </Formik>
       {/*Win-Lose Section*/}
+      <Button
+        title="toWar"
+        onPress={() => test()}
+      />
       <Text>{ "DeckID = " + deckId }</Text>
 
-      <Text style={styles.mainWinRatio}>winRatio = { getName }</Text>
+      <Text style={styles.mainWinRatio}>winRatio = {deckFName}</Text>
       <View style={styles.container2}>
         <View style={styles.container3}>
           <Text>{ "win = " + navigation.getParam('lose') }</Text>

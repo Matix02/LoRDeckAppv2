@@ -19,7 +19,7 @@ const app = {
 if(firebase.apps.length === 0) {
   firebase.initializeApp(app)
 }
-//Test Change
+
 const database = firebase.database();
 const PickerItem = Picker.Item;
 
