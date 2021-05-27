@@ -25,14 +25,31 @@ const PickerItem = Picker.Item;
 
 export default function Header({ navigation }) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [itemList , setItemList ] = useState(['Demacia', 'Noxus', 'Pilvoter', 'Ionia', 'Shurima']);
+  const [itemList , setItemList ] = useState(['Fraction 1', 'Fraction 2', 'Fraction 3', 'Fraction 4']);
   const addDeck = (values) => {
     const ref = database.ref("users");
     const newRef = ref.push();
+
+    switch (values.fraction) {
+      case "Fraction 1":
+        values.icon = "https://universe.leagueoflegends.com/images/demacia_crest_icon.png";
+        break;
+        case "Fraction 2":
+          values.icon = "https://universe.leagueoflegends.com/images/bilgewater_crest_icon.png";
+          break;
+        case "Fraction 3":
+          values.icon = "https://universe.leagueoflegends.com/images/shadow_isles_crest_icon.png";
+          break;
+      case "Fraction 4":
+        values.icon = "https://universe.leagueoflegends.com/images/freljord_crest_icon.png";
+        break;
+    }
+
     newRef.set({
       name: values.name,
       description: values.description,
       fraction: values.fraction,
+      icon: values.icon,
       win: 0,
       lose: 0,
       winRatio: 0
@@ -54,7 +71,7 @@ export default function Header({ navigation }) {
         </Icon>
 
           {/* Formularz */}
-          <Formik initialValues={{ name: '',  fraction: '', description: '', background: '' }}
+          <Formik initialValues={{ name: '',  fraction: 'Fraction 1', description: '', background: '', icon: '' }}
                   onSubmit={(values) => {
                     console.log(values);
                     addDeck(values);

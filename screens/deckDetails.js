@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { Formik } from 'formik';
 import Icon from "react-native-vector-icons/AntDesign";
+import { async } from "@firebase/util";
 
 const firebase = require("firebase");
 const app = {
@@ -23,53 +24,64 @@ const database = firebase.database();
 
 export default function DeckDetails({ navigation }) {
 
-  const [deckFName, setDeckFName] = useState(0);
+  const [winRatio, setWinRatio] = useState(0);
+  const [winCount, setWinCount] = useState(0);
+  const [loseCount, setLoseCount] = useState(0);
 
   let deckName = navigation.getParam('name');
-  let win = navigation.getParam('win');
-  let lose = navigation.getParam('lose');
-  let winRatio = navigation.getParam('winRatio');
   const deckId = navigation.getParam('key');
 
-  console.log('costa');
-  var ref = database.ref('users/' + deckId);
+  const ref = database.ref("users/" + deckId);
 
   useEffect(() => {
-    const d = database.ref('/users/-Ma952zV2RDTwGobk2U9')
+    database.ref('/users/' + deckId)
       .on('value', snapshot => {
-        console.log('user data', snapshot.val().lose);
-        setDeckFName(snapshot.val().lose);
+        setWinRatio(snapshot.val().winRatio);
+        setLoseCount(snapshot.val().lose);
+        setWinCount(snapshot.val().win);
       });
   }, )
-
 
   const updateDeck = (values) => {
     ref.update({
       name: values.name
     });
-    console.log("gtfgf");
   }
 
-  const test = () => {
-    database.ref('/users/-Ma952zV2RDTwGobk2U9')
-      .on('value', snapshot => {
-        console.log('user data', snapshot.val().lose);
-      })
-    console.log("gtfgf");
+  const decreaseWin = () => {
+    var result = ((winCount - 1) / ((winCount + 1) - loseCount) * 100);
+
+    if(winCount > 0) {
+      ref.update({
+        win: winCount - 1,
+        winRatio: result,
+      });
+    }
   }
+  const increaseWin = () => {
+    var result = ((winCount + 1) / ((winCount + 1) + loseCount) * 100);
 
-
-  const getFullName = (firstName) => {
-    return firstName;
-  }
-
-  const decreaseWin = (values) => {
-    const deckId = navigation.getParam('key');
-    let winCount = navigation.getParam('lose');
-
-    const ref = database.ref('users/' + deckId);
     ref.update({
-      lose: winCount - 1,
+      win: winCount + 1,
+      winRatio: result,
+    });
+  }
+  const decreaseLose = () => {
+    const result = (winCount / (winCount + (loseCount - 1)) * 100);
+
+    if(loseCount > 0) {
+      ref.update({
+        lose: loseCount - 1,
+        winRatio: result,
+      });
+    }
+  }
+  const increaseLose = () => {
+    const result = (winCount / (winCount + (loseCount + 1)) * 100);
+
+    ref.update({
+      lose: loseCount + 1,
+      winRatio: result,
     });
   }
 
@@ -100,23 +112,18 @@ export default function DeckDetails({ navigation }) {
           </View>
         ))}
       </Formik>
-      {/*Win-Lose Section*/}
-      <Button
-        title="toWar"
-        onPress={() => test()}
-      />
-      <Text>{ "DeckID = " + deckId }</Text>
 
-      <Text style={styles.mainWinRatio}>winRatio = {deckFName}</Text>
+      <Text style={styles.mainWinRatio}>winRatio = {winRatio}%</Text>
       <View style={styles.container2}>
         <View style={styles.container3}>
-          <Text>{ "win = " + navigation.getParam('lose') }</Text>
+          <Text> win =  {winCount} </Text>
           <View style={styles.header}>
             <View style={styles.propertyButton}>
               <Icon
                 name="plussquareo"
                 size={60}
                 color={"#1e90ff"}
+                onPress={() => increaseWin()}
               >
               </Icon>
             </View>
@@ -132,13 +139,14 @@ export default function DeckDetails({ navigation }) {
           </View>
         </View>
         <View style={styles.container3}>
-          <Text>{"lose = " + lose}</Text>
+          <Text>lose = {loseCount}</Text>
           <View style={styles.header}>
             <View style={styles.propertyButton}>
               <Icon
                 name="plussquareo"
                 size={60}
                 color={"#1e90ff"}
+                onPress={() => increaseLose()}
               >
               </Icon>
             </View>
@@ -147,7 +155,7 @@ export default function DeckDetails({ navigation }) {
                 name="minussquareo"
                 size={60}
                 color={"#ff0433"}
-                onPress={() => decreaseWin()}
+                onPress={() => decreaseLose()}
               >
               </Icon>
             </View>

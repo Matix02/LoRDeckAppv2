@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, FlatList, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import Card from './shared/card';
 
 import { createAppContainer} from "react-navigation";
@@ -51,6 +51,8 @@ class ButtonBasics extends React.Component {
           key: child.key,
           name: child.val().name,
           winRatio: child.val().winRatio,
+          icon: child.val().icon,
+
         });
       });
       this.setState({list: li});
@@ -112,36 +114,26 @@ class ButtonBasics extends React.Component {
                       alignItems: 'center',
                       justifyContent: 'space-between'
                     }}>
-                      <Image source={require('./assets/shadow_isles.png')}
+                      <Image source={{ uri: item.icon, }}
                              style={{
                                width:30,
                                height: 50,
                              }}
                       />
+
                       <Text style={{
                       }}>
                         {item.name}</Text>
-
                       <Text
                       style={{
                       }}>
-                        {item.winRatio + '%'}</Text>
+                        {item.winRatio.toFixed(2) + '%'}</Text>
                       </View>
                   </Card>
                 </TouchableOpacity>
               );
             }}
           />
-        <View style={styles.buttonContainer}>
-          <Button onPress={this._saveReference} title="Add Random Record" />
-        </View>
-          <View style={styles.buttonContainer}>
-            <Button onPress={this._deleteDatabase} title="Delete All3" />
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button onPress={() => this.props.navigation.navigate('Dashboard')}
-                    title="Teleport5" />
-          </View>
         </View>
       </View>
     );
@@ -177,6 +169,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     margin: 8,
+  },
+  imageBG: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
   },
   buttonContainer: {
     margin: 5,
