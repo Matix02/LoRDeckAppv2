@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, TextInput, ImageBackground } from 'react-native';
 import Card from './shared/card';
 
 import { createAppContainer} from "react-navigation";
@@ -7,6 +7,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 
 import DeckDetails from "./screens/deckDetails";
 import Header from './shared/header';
+import DetailHeader from "./shared/detailHeader";
 
 const firebase = require("firebase");
 
@@ -38,9 +39,12 @@ class ButtonBasics extends React.Component {
     super();
 
     this.state = {
-      list:[]
-    }
+      list:[],
+      filterList:[],
+      query: null,
+    };
   }
+
   componentDidMount() {
     const ref = firebase.database().ref("users/");
 
@@ -56,9 +60,29 @@ class ButtonBasics extends React.Component {
         });
       });
       this.setState({list: li});
+      this.setState({filterList: li});
     });
   }
 
+  filterItem = event => {
+    let query = event.nativeEvent.text;
+    this.setState({
+      query: query,
+    });
+    if(query === ""){
+      this.setState({
+        list: this.state.filterList,
+      });
+    } else {
+      var data = this.state.filterList;
+      query = query.toLowerCase();
+      data = data.filter(l => l.name.toLowerCase().match(query));
+
+      this.setState({
+        list: data,
+      });
+    }
+  };
   _onPressButton = () => {
     const ref = firebase.database().ref("users");
     const newRef = ref.push();
@@ -66,7 +90,6 @@ class ButtonBasics extends React.Component {
       name: this.username,
     });
   }
-
   _deleteDeck() {
     const ref = firebase.database().ref("users/");
     ref.on('value', snapshot => {
@@ -75,7 +98,6 @@ class ButtonBasics extends React.Component {
       });
     });
   }
-
   _deleteDatabase() {
     const ref = firebase.database().ref("users/");
     ref.on('value', snapshot => {
@@ -84,7 +106,6 @@ class ButtonBasics extends React.Component {
       });
     });
   }
-
   _saveReference() {
     const ref = database.ref("users");
     const newRef = ref.push();
@@ -99,7 +120,11 @@ class ButtonBasics extends React.Component {
 
       <View style={styles.container}>
         {/*<Header />*/}
-
+        <TextInput
+          placeholder='Search'
+          value = {this.state.query}
+          onChange = {this.filterItem.bind(this)}
+        />
         <View style={styles.content}>
           <FlatList
             data={this.state.list}
@@ -150,7 +175,10 @@ const screens = {
     }
   },
   Dashboard: {
-    screen: DeckDetails
+    screen: DeckDetails,
+    navigationOptions: {
+      headerTitle: () => <DetailHeader />,
+    }
   }
 }
 

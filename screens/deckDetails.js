@@ -27,6 +27,7 @@ export default function DeckDetails({ navigation }) {
   const [winRatio, setWinRatio] = useState(0);
   const [winCount, setWinCount] = useState(0);
   const [loseCount, setLoseCount] = useState(0);
+  const [desc, setDesc] = useState(0);
 
   let deckName = navigation.getParam('name');
   const deckId = navigation.getParam('key');
@@ -39,19 +40,22 @@ export default function DeckDetails({ navigation }) {
         setWinRatio(snapshot.val().winRatio);
         setLoseCount(snapshot.val().lose);
         setWinCount(snapshot.val().win);
+        setDesc(snapshot.val().description);
       });
-  }, )
+
+  }, );
+  let deckDesc = desc;
 
   const updateDeck = (values) => {
     ref.update({
-      name: values.name
+      name: values.name,
+      description: values.description,
     });
   }
 
   const decreaseWin = () => {
-    var result = ((winCount - 1) / ((winCount + 1) - loseCount) * 100);
-
     if(winCount > 0) {
+      const result = ((winCount - 1) / ((winCount + 1) - loseCount) * 100);
       ref.update({
         win: winCount - 1,
         winRatio: result,
@@ -59,7 +63,7 @@ export default function DeckDetails({ navigation }) {
     }
   }
   const increaseWin = () => {
-    var result = ((winCount + 1) / ((winCount + 1) + loseCount) * 100);
+    const result = ((winCount + 1) / ((winCount + 1) + loseCount) * 100);
 
     ref.update({
       win: winCount + 1,
@@ -67,9 +71,9 @@ export default function DeckDetails({ navigation }) {
     });
   }
   const decreaseLose = () => {
-    const result = (winCount / (winCount + (loseCount - 1)) * 100);
 
     if(loseCount > 0) {
+      const result = (winCount / (winCount + (loseCount - 1)) * 100);
       ref.update({
         lose: loseCount - 1,
         winRatio: result,
@@ -85,13 +89,19 @@ export default function DeckDetails({ navigation }) {
     });
   }
 
+  const deleteDeck = () => {
+   ref.remove();
+   ref.off();
+   navigation.goBack('App');
+  }
+
   return (
     <View style={styles.container}>
       {/*<Text>DeckDetails Screen</Text>*/}
       {/*<Text>{ navigation.getParam('name')}</Text>*/}
       {/*<Text>{ deckName }</Text>*/}
 
-      <Formik initialValues={{ name: deckName,  fraction: '', description: '', background: '' }}
+      <Formik initialValues={{ name: deckName,  fraction: '', description: desc, background: '' }}
               onSubmit={(values) => {
                 console.log(values);
                 updateDeck(values);
@@ -104,16 +114,25 @@ export default function DeckDetails({ navigation }) {
               onChangeText={props.handleChange('name')}
               value={props.values.name}
             />
+            <TextInput
+              multiline
+              placeholder='Description...'
+              onChangeText={props.handleChange('description')}
+              value={props.values.description}
+            />
             <Button
               title="Submit23"
               onPress={() => props.handleSubmit()}
             />
-
+            <Button
+              title="Erase"
+              onPress={() => deleteDeck() }
+            />
           </View>
         ))}
       </Formik>
 
-      <Text style={styles.mainWinRatio}>winRatio = {winRatio}%</Text>
+      <Text style={styles.mainWinRatio}>winRatio = {winRatio.toFixed(2)}%</Text>
       <View style={styles.container2}>
         <View style={styles.container3}>
           <Text> win =  {winCount} </Text>

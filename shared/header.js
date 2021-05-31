@@ -118,7 +118,7 @@ export default function Header({ navigation }) {
       </Modal>
 
       <View style={styles.header}>
-      <Text style={styles.headerText}>App</Text>
+      <Text style={styles.headerText}>DeckTracker</Text>
       {/*/<Button title="add" onPress={() => navigation.push('AddDeck')}/>*/}
 
       <Icon
