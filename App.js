@@ -74,13 +74,13 @@ class ButtonBasics extends React.Component {
         list: this.state.filterList,
       });
     } else {
-      var data = this.state.filterList;
-      query = query.toLowerCase();
-      data = data.filter(l => l.name.toLowerCase().match(query));
+        var data = this.state.filterList;
+        query = query.toLowerCase();
+        data = data.filter(l => l.name.toLowerCase().match(query));
 
-      this.setState({
-        list: data,
-      });
+        this.setState({
+          list: data,
+        });
     }
   };
   _onPressButton = () => {

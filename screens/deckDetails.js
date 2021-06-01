@@ -82,7 +82,6 @@ export default function DeckDetails({ navigation }) {
   }
   const increaseLose = () => {
     const result = (winCount / (winCount + (loseCount + 1)) * 100);
-
     ref.update({
       lose: loseCount + 1,
       winRatio: result,
