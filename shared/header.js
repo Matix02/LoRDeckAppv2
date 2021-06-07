@@ -119,8 +119,6 @@ export default function Header({ navigation }) {
 
       <View style={styles.header}>
       <Text style={styles.headerText}>DeckTracker</Text>
-      {/*/<Button title="add" onPress={() => navigation.push('AddDeck')}/>*/}
-
       <Icon
         name="add-circle"
         size={40}

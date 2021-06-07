@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react'
 import { View, Text, TextInput, Button, StyleSheet } from "react-native";
 import { Formik } from 'formik';
 import Icon from "react-native-vector-icons/AntDesign";
-import { async } from "@firebase/util";
 
 const firebase = require("firebase");
 const app = {
@@ -27,10 +26,10 @@ export default function DeckDetails({ navigation }) {
   const [winRatio, setWinRatio] = useState(0);
   const [winCount, setWinCount] = useState(0);
   const [loseCount, setLoseCount] = useState(0);
-  const [desc, setDesc] = useState(0);
 
   let deckName = navigation.getParam('name');
   const deckId = navigation.getParam('key');
+  let deckDesc = navigation.getParam('description');
 
   const ref = database.ref("users/" + deckId);
 
@@ -40,11 +39,9 @@ export default function DeckDetails({ navigation }) {
         setWinRatio(snapshot.val().winRatio);
         setLoseCount(snapshot.val().lose);
         setWinCount(snapshot.val().win);
-        setDesc(snapshot.val().description);
       });
 
   }, );
-  let deckDesc = desc;
 
   const updateDeck = (values) => {
     ref.update({
@@ -53,15 +50,6 @@ export default function DeckDetails({ navigation }) {
     });
   }
 
-  const decreaseWin = () => {
-    if(winCount > 0) {
-      const result = ((winCount - 1) / ((winCount + 1) - loseCount) * 100);
-      ref.update({
-        win: winCount - 1,
-        winRatio: result,
-      });
-    }
-  }
   const increaseWin = () => {
     const result = ((winCount + 1) / ((winCount + 1) + loseCount) * 100);
 
@@ -69,6 +57,15 @@ export default function DeckDetails({ navigation }) {
       win: winCount + 1,
       winRatio: result,
     });
+  }
+  const decreaseWin = () => {
+    if(winCount > 0) {
+      const result = ((winCount) / ((winCount - 1) + loseCount) * 100);
+      ref.update({
+        win: winCount - 1,
+        winRatio: result,
+      });
+    }
   }
   const decreaseLose = () => {
 
@@ -96,11 +93,8 @@ export default function DeckDetails({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/*<Text>DeckDetails Screen</Text>*/}
-      {/*<Text>{ navigation.getParam('name')}</Text>*/}
-      {/*<Text>{ deckName }</Text>*/}
 
-      <Formik initialValues={{ name: deckName,  fraction: '', description: desc, background: '' }}
+      <Formik initialValues={{ name: deckName,  fraction: '', description: deckDesc, background: '' }}
               onSubmit={(values) => {
                 console.log(values);
                 updateDeck(values);
@@ -108,78 +102,110 @@ export default function DeckDetails({ navigation }) {
       >
         {(props => (
           <View style={styles.secondContainer}>
+            <View style={styles.titleContainer}>
+            <Text style={{
+              flexBasis: "auto",
+              flexGrow: 0,
+              flexShrink: 1,
+              fontSize: 16,
+
+            }}>Title:</Text>
             <TextInput
+              style={{
+                flexBasis: "auto",
+                flexGrow: 1,
+                flexShrink: 1,
+                fontSize: 16,
+
+              }}
               placeholder='Title'
               onChangeText={props.handleChange('name')}
               value={props.values.name}
             />
+            </View>
+            {/*Calculate Function */}
+            <Text style={styles.mainWinRatio}> {winRatio.toFixed(2)}%</Text>
+            <View style={styles.container2}>
+              <View style={styles.container3}>
+                <Text style={styles.numberCount}>{winCount}</Text>
+                <Text>Win</Text>
+                <View style={styles.header}>
+                  <View style={styles.propertyButton}>
+                    <Icon
+                      name="plussquareo"
+                      size={60}
+                      color={"#1e90ff"}
+                      onPress={() => increaseWin()}
+                    >
+                    </Icon>
+                  </View>
+                  <View style={styles.propertyButton}>
+                    <Icon
+                      name="minussquareo"
+                      size={60}
+                      color={"#ff0433"}
+                      onPress={() => decreaseWin()}
+                    >
+                    </Icon>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.container3}>
+                <Text style={styles.numberCount}>{loseCount}</Text>
+                <Text>Lose</Text>
+                <View style={styles.header}>
+                  <View style={styles.propertyButton}>
+                    <Icon
+                      name="plussquareo"
+                      size={60}
+                      color={"#1e90ff"}
+                      onPress={() => increaseLose()}
+                    >
+                    </Icon>
+                  </View>
+                  <View style={styles.propertyButton}>
+                    <Icon
+                      name="minussquareo"
+                      size={60}
+                      color={"#ff0433"}
+                      onPress={() => decreaseLose()}
+                    >
+                    </Icon>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View style={styles.titleContainer}>
+            <Text style={{
+              flexBasis: "auto",
+              flexGrow: 0,
+              flexShrink: 1,
+              fontSize: 16,
+            }}>Description:</Text>
             <TextInput
+              style={{
+                flexBasis: "auto",
+                flexGrow: 1,
+                flexShrink: 1,
+                fontSize: 16,
+
+              }}
               multiline
               placeholder='Description...'
               onChangeText={props.handleChange('description')}
               value={props.values.description}
             />
+            </View>
             <Button
-              title="Submit23"
+              title="Submit"
               onPress={() => props.handleSubmit()}
             />
-            <Button
-              title="Erase"
-              onPress={() => deleteDeck() }
-            />
+
           </View>
         ))}
       </Formik>
 
-      <Text style={styles.mainWinRatio}>winRatio = {winRatio.toFixed(2)}%</Text>
-      <View style={styles.container2}>
-        <View style={styles.container3}>
-          <Text> win =  {winCount} </Text>
-          <View style={styles.header}>
-            <View style={styles.propertyButton}>
-              <Icon
-                name="plussquareo"
-                size={60}
-                color={"#1e90ff"}
-                onPress={() => increaseWin()}
-              >
-              </Icon>
-            </View>
-            <View style={styles.propertyButton}>
-              <Icon
-                name="minussquareo"
-                size={60}
-                color={"#ff0433"}
-                onPress={() => decreaseWin()}
-              >
-              </Icon>
-            </View>
-          </View>
-        </View>
-        <View style={styles.container3}>
-          <Text>lose = {loseCount}</Text>
-          <View style={styles.header}>
-            <View style={styles.propertyButton}>
-              <Icon
-                name="plussquareo"
-                size={60}
-                color={"#1e90ff"}
-                onPress={() => increaseLose()}
-              >
-              </Icon>
-            </View>
-            <View style={styles.propertyButton}>
-              <Icon
-                name="minussquareo"
-                size={60}
-                color={"#ff0433"}
-                onPress={() => decreaseLose()}
-              >
-              </Icon>
-            </View>
-          </View>
-        </View>
-      </View>
+
     </View>
   )
 }
@@ -192,7 +218,9 @@ const styles = StyleSheet.create({
   },
   container2: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
+
   },
   container3: {
     alignItems: 'center',
@@ -205,13 +233,18 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
-
-
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   mainWinRatio: {
+    fontSize: 50,
     alignSelf: 'center',
     alignItems: 'center',
-
+  },
+  numberCount: {
+    fontSize: 40,
   },
   propertyButton: {
     padding: 10,

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, TextInput, ImageBackground } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity, Image, TextInput, Button } from 'react-native';
 import Card from './shared/card';
 
 import { createAppContainer} from "react-navigation";
@@ -8,6 +8,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import DeckDetails from "./screens/deckDetails";
 import Header from './shared/header';
 import DetailHeader from "./shared/detailHeader";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 const firebase = require("firebase");
 
@@ -56,7 +57,7 @@ class ButtonBasics extends React.Component {
           name: child.val().name,
           winRatio: child.val().winRatio,
           icon: child.val().icon,
-
+          description: child.val().description,
         });
       });
       this.setState({list: li});
@@ -83,6 +84,7 @@ class ButtonBasics extends React.Component {
         });
     }
   };
+
   _onPressButton = () => {
     const ref = firebase.database().ref("users");
     const newRef = ref.push();
@@ -90,7 +92,7 @@ class ButtonBasics extends React.Component {
       name: this.username,
     });
   }
-  _deleteDeck() {
+  _deleteAllDeck() {
     const ref = firebase.database().ref("users/");
     ref.on('value', snapshot => {
       snapshot.forEach(child => {
@@ -114,6 +116,10 @@ class ButtonBasics extends React.Component {
     });
   }
 
+  _deleteDeck = (deckID) => {
+    const ref = firebase.database().ref('/users/' + deckID);
+    ref.remove();
+  }
   render() {
     const { navigation } = this.props;
     return (
@@ -126,10 +132,11 @@ class ButtonBasics extends React.Component {
           onChange = {this.filterItem.bind(this)}
         />
         <View style={styles.content}>
-          <FlatList
+          <SwipeListView
+            useFlatList={true}
             data={this.state.list}
             keyExtractor={item => item.key}
-            renderItem={({ item }) => {
+            renderItem={({ item }, rowMap) => {
               return (
                 <TouchableOpacity onPress={() => this.props.navigation
                   .navigate('Dashboard', item)}>
@@ -158,6 +165,17 @@ class ButtonBasics extends React.Component {
                 </TouchableOpacity>
               );
             }}
+            renderHiddenItem={({item}, rowMap) => (
+              <View style={styles.hiddenBtn}>
+                <Button
+                  title='Usun'
+                  onPress={() => this._deleteDeck(item.key)}
+                />
+              </View>
+            )}
+            leftOpenValue={75}
+            rightOpenValue={-75}
+
           />
         </View>
       </View>
@@ -214,5 +232,11 @@ const styles = StyleSheet.create({
   deckRow: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  hiddenBtn: {
+    alignItems: 'flex-end',
+    alignSelf: 'flex-end',
+    width: 70,
+    height: 50,
   }
 });
